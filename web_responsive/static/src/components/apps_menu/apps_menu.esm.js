@@ -29,14 +29,19 @@ patch(WebClient.prototype, {
         });
         this.user = user;
         onWillStart(async () => {
-            const is_redirect_home = await this.orm.searchRead(
-                "res.users",
-                [["id", "=", this.user.userId]],
-                ["is_redirect_home"]
-            );
-            user.updateContext({
-                is_redirect_to_home: is_redirect_home[0]?.is_redirect_home,
-            });
+            try {
+                const is_redirect_home = await this.orm.searchRead(
+                    "res.users",
+                    [["id", "=", this.user.userId]],
+                    ["is_redirect_home"]
+                );
+                user.updateContext({
+                    is_redirect_to_home: is_redirect_home[0]?.is_redirect_home,
+                });
+            } catch (e) {
+                console.warn("web_responsive: could not read is_redirect_home, defaulting to false", e);
+                user.updateContext({is_redirect_to_home: false});
+            }
         });
         this.redirect = false;
     },

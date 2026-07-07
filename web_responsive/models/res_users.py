@@ -7,6 +7,14 @@ from odoo import api, fields, models
 class ResUsers(models.Model):
     _inherit = "res.users"
 
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + [
+            'is_redirect_home',
+            'apps_menu_search_type',
+            'apps_menu_theme',
+        ]
+
     apps_menu_search_type = fields.Selection(
         [
             ("canonical", "Canonical"),
